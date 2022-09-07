@@ -20,13 +20,13 @@ type concreteProgram = list(concreteProgramPiece);
 // [SymbolC("define"), SymbolC("a"), NumberC(3)]
 // [SymbolC("+"), NumberC(-1), NumberC(17)]
 
-/* a Rackette name */
+/* a Rocker name */
 type name =
   | Name(string);
 // Name("fact")
 // Name("alod")
 
-/* a Rackette expression */
+/* a Rocker expression */
 type expression =
   | NumE(int)
   // NumE(3)
@@ -65,12 +65,12 @@ type expression =
   // ApplicationE([NameE(Name("+")), NameE(Name("a")), NameE(Name("b"))]))
   // ApplicationE([NameE(Name("zero?")), NameE(Name("a"))])
 
-/* a Rackette definition */
+/* a Rocker definition */
 type definition = (name, expression);
 // (Name("a"), NumE("3"))
 // (Name("alod"), EmptyE)
 
-/* a piece of Rackette that can be processed:
+/* a piece of Rocker that can be processed:
  * either a definition or an expression */
 type abstractProgramPiece =
   | Definition(definition)
@@ -80,7 +80,7 @@ type abstractProgramPiece =
   // Expression(ApplicationE([NameE(Name("zero?")), NameE(Name("b"))]))
   // Expression(NumE(17))
 
-/* a representation of a Rackette program -
+/* a representation of a Rocker program -
  * any number of pieces */
 type abstractProgram = list(abstractProgramPiece);
 // [Definition((Name("b"), NumE(0)))]
@@ -88,7 +88,7 @@ type abstractProgram = list(abstractProgramPiece);
 //         Expression(ApplicationE([NameE(Name("zero?")), NameE(Name("b"))]))]
 // [Expression(NumE(17))]
 
-/* a Rackette value: the result of evaluating a Rackette expression */
+/* a Rocker value: the result of evaluating a Rocker expression */
 type value =
   | NumV(int)
   // NumV(34)

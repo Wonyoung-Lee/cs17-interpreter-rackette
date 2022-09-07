@@ -1,4 +1,4 @@
-open CS17SetupRackette;
+open CS17SetupRocker;
 open Read.Reader;
 open Types;
 
@@ -35,7 +35,7 @@ type concreteProgram = list(concreteProgramPiece);
 // [SymbolC("define"), SymbolC("a"), NumberC(3)]
 // [SymbolC("+"), NumberC(-1), NumberC(17)]
 
-/* a Rackette name */
+/* a Rocker name */
 A name is for any valid Racket name such as user inputted ones and builtin
 procedure names.
 type name =
@@ -43,7 +43,7 @@ type name =
 // Name("fact")
 // Name("alod")
 
-/* a Rackette expression */
+/* a Rocker expression */
 And expression is the result of parseExpression and signifies all the possible 
 expressions of Racket code. 
 type expression =
@@ -98,7 +98,7 @@ type expression =
   // ApplicationE([NameE(Name("+")), NameE(Name("a")), NameE(Name("b"))]))
   // ApplicationE([NameE(Name("zero?")), NameE(Name("a"))])
 
-/* a Rackette definition */
+/* a Rocker definition */
 A definition is a pair of name and expression and essentially signifies a 
 binding in the top level environment but is different in that the second 
 argument of the pair is an expression (the premature type of value) 
@@ -107,7 +107,7 @@ type definition = (name, expression);
 // (Name("a"), NumE("3"))
 // (Name("alod"), EmptyE)
 
-/* a piece of Rackette that can be processed:
+/* a piece of Rocker that can be processed:
  * either a definition or an expression */
 An abstractProgramPiece is made by parsing a concreteProgramPiece and is the
 component of an abstractProgram. It is the input of the procedure eval. 
@@ -119,7 +119,7 @@ type abstractProgramPiece =
   // Expression(ApplicationE([NameE(Name("zero?")), NameE(Name("b"))]))
   // Expression(NumE(17))
 
-/* a representation of a Rackette program -
+/* a representation of a Rocker program -
  * any number of pieces */
  An abstractProgram is a list of abstractProgramPieces and is the intermediary
  type that is made to make the process of conversion easier. 
@@ -129,7 +129,7 @@ type abstractProgram = list(abstractProgramPiece);
 //         Expression(ApplicationE([NameE(Name("zero?")), NameE(Name("b"))]))]
 // [Expression(NumE(17))]
 
-/* a Rackette value: the result of evaluating a Rackette expression */
+/* a Rocker value: the result of evaluating a Rocker expression */
 A value is the final version, the evaluated result of the code that was input
 by the user through rawProgram form. This type is converted to a string later
 by the stringOfValue procedure. 
@@ -1297,52 +1297,52 @@ let process: abstractProgram => list(value) =
   };
 
 /* 
-rackette: rawProgram -> string list
+Rocker: rawProgram -> string list
 
 Input: program: a rawProgram which is a string of Racket code
 Output: a list of strings which is the result of reading, parsing, 
 and processing (evaluating and defining) the input code
 */
-let rackette: rawProgram => list(string) =
+let Rocker: rawProgram => list(string) =
   program => List.map(stringOfValue, process(parse(readAll(program))));
   
-// Test rackette
-checkExpect(rackette("((lambda (x y)((lambda (y)(+ x y))x))17 18)"), ["34"], 
-"rackette test-case #1");
+// Test Rocker
+checkExpect(rocker("((lambda (x y)((lambda (y)(+ x y))x))17 18)"), ["34"], 
+"rocker test-case #1");
 
 // # 
-// checkExpect(rackette("((lambda (x y)((lambda (x)(+ x y))y))17 18)"), ["36"],
-// "rackette test-case #2");
+// checkExpect(rocker("((lambda (x y)((lambda (x)(+ x y))y))17 18)"), ["36"],
+// "rocker test-case #2");
 
-checkExpect(rackette("(define y 17)(let ((y 3))(+ y 7))"), ["10"],
-  "rackette test-case #3");
+checkExpect(rocker("(define y 17)(let ((y 3))(+ y 7))"), ["10"],
+  "rocker test-case #3");
  
 // # supposed to be 17 but is 34
-// checkExpect(rackette("(let ((x 0)(y 18))(let 
+// checkExpect(rocker("(let ((x 0)(y 18))(let 
 // ((f (lambda (a b)(+ x b )))(x 17))(f y x)))"), ["17"], 
-// "rackette test-case #4");
+// "rocker test-case #4");
 
-checkExpect(rackette("(define fact (lambda (x)(if (zero? x) 1 
+checkExpect(rocker("(define fact (lambda (x)(if (zero? x) 1 
 (* x (fact ( - x 1))))))(fact 3)"), ["6"], 
-  "rackette test-case #5");
+  "rocker test-case #5");
 
-checkExpect(rackette("(+ 3 6)"), ["9"], "rackette test-case #6");
+checkExpect(rocker("(+ 3 6)"), ["9"], "rocker test-case #6");
 
 // # supposed to be 0 but is 5
-// checkExpect(rackette("(let ((x 0))(let 
+// checkExpect(rocker("(let ((x 0))(let 
 // (( f (lambda (a)(* x a ))))(let ((x 1 ))(f 5))))
-// "), ["0"], "rackette test-case #6");
+// "), ["0"], "rocker test-case #6");
 
 // # 
-// checkExpect(rackette("((lambda (x y)((lambda (x)(+ x y))x))17 18)"), ["35"], 
-//   "rackette test-case #7");
+// checkExpect(rocker("((lambda (x y)((lambda (x)(+ x y))x))17 18)"), ["35"], 
+//   "rocker test-case #7");
 
-checkExpect(rackette("(define x 1) (+ x 1)"), ["2"],
+checkExpect(rocker("(define x 1) (+ x 1)"), ["2"],
   "operation and definitions");
 
-checkExpect(rackette("6 7"), ["6", "7"], "numbers");
+checkExpect(rocker("6 7"), ["6", "7"], "numbers");
 
-checkExpect(rackette("(if (= 0 9) 6 4)"), ["4"], " if statement");
+checkExpect(rocker("(if (= 0 9) 6 4)"), ["4"], " if statement");
 
  // Testing eval 
   checkExpect(stringOfValue(eval(initialTle, [], NumE(5))), "5", 
